@@ -64,7 +64,12 @@ function getCurrentDateString() {
 
       for (let i = 0; i < lines.length; i++) {
         const element = lines[i];
-        const columns = element.split('\t');
+        let columns = element.split('\t');
+
+        // Trim spaces
+        columns = columns.map(function (column) {
+          return column.trim();
+        });
 
         // This copies or clones bookTemplate object
         let book = JSON.parse(JSON.stringify(bookTemplate));
@@ -91,33 +96,38 @@ function getCurrentDateString() {
         // TODO: This could be just looped over from 10 to 12, inclusive
         let alternative = [];
 
-        // TODO: If there's no alternative, the array is full of random stuff
-        // so add only, if there really is an alternative
-        alternative = columns[10].split(";");
-        book.alternatives.push({
-          "alternativeLabel": alternative[0],
-          "alternativeAvailabilityUrl": alternative[1]
-        })
+        if (columns[10] != "") {
+          alternative = columns[10].split(";");
+          book.alternatives.push({
+            "alternativeLabel": alternative[0],
+            "alternativeAvailabilityUrl": alternative[1]
+          })
 
-        alternative = columns[11].split(";");
-        book.alternatives.push({
-          "alternativeLabel": alternative[0],
-          "alternativeAvailabilityUrl": alternative[1]
-        })
+        }
 
-        alternative = columns[12].split(";");
-        book.alternatives.push({
-          "alternativeLabel": alternative[0],
-          "alternativeAvailabilityUrl": alternative[1]
-        })
+        if (columns[11] != "") {
+          alternative = columns[11].split(";");
+          book.alternatives.push({
+            "alternativeLabel": alternative[0],
+            "alternativeAvailabilityUrl": alternative[1]
+          })
+        }
+
+        if (columns[12] != "") {
+          alternative = columns[12].split(";");
+          book.alternatives.push({
+            "alternativeLabel": alternative[0],
+            "alternativeAvailabilityUrl": alternative[1]
+          })
+        }
 
         result.books.books.push(book);
       }
 
       console.log(result.books.books);
-      // TODO: Force download
-      const blob = new Blob([JSON.stringify(result)], { type: "text/json" });
-
+      const blob = new Blob([JSON.stringify(result, null, 2)], { type: "text/json" });
+      const a = document.querySelector("a.button");
+      a.href = window.URL.createObjectURL(blob);
     };
 
     reader.readAsText(event.target.files[0]);
