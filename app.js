@@ -124,7 +124,6 @@ function getCurrentDateString() {
         result.books.books.push(book);
       }
 
-      console.log(result.books.books);
       const blob = new Blob([JSON.stringify(result, null, 2)], { type: "text/json" });
       const a = document.querySelector("a.button");
       a.href = window.URL.createObjectURL(blob);
@@ -132,5 +131,14 @@ function getCurrentDateString() {
 
     reader.readAsText(event.target.files[0]);
 
+  });
+
+  const button = document.querySelector("a.button");
+  button.addEventListener("click", function (event) {
+    const element = event.target;
+    const href = element.getAttribute("href");
+    if (href.length < 1) {
+      event.preventDefault();
+    }
   });
 })();
