@@ -1,0 +1,53 @@
+* {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+h1 {
+  font-weight: normal;
+  text-align: center;
+}
+
+label {
+  display: inline-block;
+  margin-bottom: 10px;
+  background-color: yellowgreen;
+  border: 1px solid darkgreen;
+  padding: 10px 20px;
+  border-radius: 3px;
+  border: none;
+  color: white;
+  font-size: 16px;
+  box-shadow: 0 0 12px gray;
+}
+
+input[type=file] {
+  display: none;
+}
+
+form {
+  align-self: center;
+}
+
+.container {
+  width: 320px;
+  height: 240px;
+  padding: 20px;
+  background: linear-gradient(lightskyblue, lightblue);
+  border-radius: 3px;
+  box-shadow: 0 0 12px lightgray;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
