@@ -72,35 +72,28 @@ function getCurrentDateString() {
         // This copies or clones bookTemplate object
         let book = JSON.parse(JSON.stringify(bookTemplate));
 
-        book.title = columns[0];
-        book.author = columns[1];
-        book.updated = columns[2];
-        book.coverImageUrl = columns[3];
+        book.isbn = columns[0];
+        book.title = columns[1];
+        book.author = columns[2];
+        book.updated = columns[3];
+        book.coverImageUrl = columns[4];
 
-        book.ageGroup = columns[4].split(",").map(function(item) {
+        book.ageGroup = columns[5].split(",").map(function(item) {
           return item.trim();
         });
 
-        book.themes = columns[5].split(",").map(function(item) {
+        book.themes = columns[6].split(",").map(function(item) {
           return item.trim();
         });
 
-        book.description = columns[6];
-        book.availabilityUrl = columns[7];
+        book.description = columns[7];
+        book.availabilityUrl = columns[8];
 
-        book.additionalInformation = columns[8];
-        book.helpText = columns[9];
+        book.additionalInformation = columns[9];
+        book.helpText = columns[10];
 
         // TODO: This could be just looped over from 10 to 12, inclusive
         let alternative = [];
-
-        if (columns[10] != "") {
-          alternative = columns[10].split(";");
-          book.alternatives.push({
-            alternativeLabel: alternative[0],
-            alternativeAvailabilityUrl: alternative[1]
-          });
-        }
 
         if (columns[11] != "") {
           alternative = columns[11].split(";");
@@ -112,6 +105,14 @@ function getCurrentDateString() {
 
         if (columns[12] != "") {
           alternative = columns[12].split(";");
+          book.alternatives.push({
+            alternativeLabel: alternative[0],
+            alternativeAvailabilityUrl: alternative[1]
+          });
+        }
+
+        if (columns[13] != "") {
+          alternative = columns[13].split(";");
           book.alternatives.push({
             alternativeLabel: alternative[0],
             alternativeAvailabilityUrl: alternative[1]
