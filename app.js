@@ -7,7 +7,6 @@
  */
 
 function getCurrentDateString() {
-
   const date = new Date();
 
   let year = date.getFullYear();
@@ -25,36 +24,35 @@ function getCurrentDateString() {
   return "" + year + "-" + month + "-" + dayno;
 }
 
-(function () {
-
+(function() {
   const result = {
-    "books": {
-      "title": "Perhelukudiplomin kirjalista",
-      "description": "",
-      "updated": getCurrentDateString(),
-      "books": [],
+    books: {
+      title: "Perhelukudiplomin kirjalista",
+      description: "",
+      updated: getCurrentDateString(),
+      books: []
     }
   };
 
   const bookTemplate = {
-    "title": "",
-    "author": "",
-    "updated": "",
-    "coverImageUrl": "",
-    "ageGroup": "",
-    "themes": [],
-    "description": "",
-    "availabilityUrl": "",
-    "alternatives": [],
-    "additionalInformation": "",
-    "helpText": ""
+    isbn: "",
+    title: "",
+    author: "",
+    updated: "",
+    coverImageUrl: "",
+    ageGroup: "",
+    themes: [],
+    description: "",
+    availabilityUrl: "",
+    alternatives: [],
+    additionalInformation: "",
+    helpText: ""
   };
 
   const files = document.querySelector("input[type='file']");
-  files.addEventListener("change", function (event) {
-
+  files.addEventListener("change", function(event) {
     const reader = new FileReader();
-    reader.onload = function (event) {
+    reader.onload = function(event) {
       const text = event.target.result;
       const lines = text.split("\n");
 
@@ -64,10 +62,10 @@ function getCurrentDateString() {
 
       for (let i = 0; i < lines.length; i++) {
         const element = lines[i];
-        let columns = element.split('\t');
+        let columns = element.split("\t");
 
         // Trim spaces
-        columns = columns.map(function (column) {
+        columns = columns.map(function(column) {
           return column.trim();
         });
 
@@ -76,14 +74,14 @@ function getCurrentDateString() {
 
         book.title = columns[0];
         book.author = columns[1];
-        book.updated = columns[2]
+        book.updated = columns[2];
         book.coverImageUrl = columns[3];
 
-        book.ageGroup = columns[4].split(",").map(function (item) {
+        book.ageGroup = columns[4].split(",").map(function(item) {
           return item.trim();
         });
 
-        book.themes = columns[5].split(",").map(function (item) {
+        book.themes = columns[5].split(",").map(function(item) {
           return item.trim();
         });
 
@@ -99,42 +97,42 @@ function getCurrentDateString() {
         if (columns[10] != "") {
           alternative = columns[10].split(";");
           book.alternatives.push({
-            "alternativeLabel": alternative[0],
-            "alternativeAvailabilityUrl": alternative[1]
-          })
-
+            alternativeLabel: alternative[0],
+            alternativeAvailabilityUrl: alternative[1]
+          });
         }
 
         if (columns[11] != "") {
           alternative = columns[11].split(";");
           book.alternatives.push({
-            "alternativeLabel": alternative[0],
-            "alternativeAvailabilityUrl": alternative[1]
-          })
+            alternativeLabel: alternative[0],
+            alternativeAvailabilityUrl: alternative[1]
+          });
         }
 
         if (columns[12] != "") {
           alternative = columns[12].split(";");
           book.alternatives.push({
-            "alternativeLabel": alternative[0],
-            "alternativeAvailabilityUrl": alternative[1]
-          })
+            alternativeLabel: alternative[0],
+            alternativeAvailabilityUrl: alternative[1]
+          });
         }
 
         result.books.books.push(book);
       }
 
-      const blob = new Blob([JSON.stringify(result, null, 2)], { type: "text/json" });
+      const blob = new Blob([JSON.stringify(result, null, 2)], {
+        type: "text/json"
+      });
       const a = document.querySelector("a.button");
       a.href = window.URL.createObjectURL(blob);
     };
 
     reader.readAsText(event.target.files[0]);
-
   });
 
   const button = document.querySelector("a.button");
-  button.addEventListener("click", function (event) {
+  button.addEventListener("click", function(event) {
     const element = event.target;
     const href = element.getAttribute("href");
     if (href.length < 1) {
