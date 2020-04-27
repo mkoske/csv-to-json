@@ -24,14 +24,14 @@ function getCurrentDateString() {
   return "" + year + "-" + month + "-" + dayno;
 }
 
-(function() {
+(function () {
   const result = {
     books: {
       title: "Perhelukudiplomin kirjalista",
       description: "",
       updated: getCurrentDateString(),
-      books: []
-    }
+      books: [],
+    },
   };
 
   const bookTemplate = {
@@ -46,13 +46,16 @@ function getCurrentDateString() {
     availabilityUrl: "",
     alternatives: [],
     additionalInformation: "",
-    helpText: ""
+    helpText: "",
   };
 
+  const isbns = [];
+  let containsDuplicates = false;
+  const log = document.querySelector(".log");
   const files = document.querySelector("input[type='file']");
-  files.addEventListener("change", function(event) {
+  files.addEventListener("change", function (event) {
     const reader = new FileReader();
-    reader.onload = function(event) {
+    reader.onload = function (event) {
       const text = event.target.result;
       const lines = text.split("\n");
 
@@ -63,14 +66,26 @@ function getCurrentDateString() {
       for (let i = 0; i < lines.length; i++) {
         const element = lines[i];
         let columns = element.split("\t");
+        if (columns.length !== 14) {
+          continue;
+        }
 
         // Trim spaces
-        columns = columns.map(function(column) {
+        columns = columns.map(function (column) {
           return column.trim();
         });
 
         // This copies or clones bookTemplate object
         let book = JSON.parse(JSON.stringify(bookTemplate));
+
+        if (isbns.includes(columns[0])) {
+          let p = document.createElement("p");
+          p.appendChild(document.createTextNode(columns[0]));
+          log.appendChild(p);
+          containsDuplicates = true;
+        } else {
+          isbns.push(columns[0]);
+        }
 
         book.isbn = columns[0];
         book.title = columns[1];
@@ -78,11 +93,11 @@ function getCurrentDateString() {
         book.updated = columns[3];
         book.coverImageUrl = columns[4];
 
-        book.ageGroup = columns[5].split(",").map(function(item) {
+        book.ageGroup = columns[5].split(",").map(function (item) {
           return item.trim();
         });
 
-        book.themes = columns[6].split(",").map(function(item) {
+        book.themes = columns[6].split(",").map(function (item) {
           return item.trim();
         });
 
@@ -99,7 +114,7 @@ function getCurrentDateString() {
           alternative = columns[11].split(";");
           book.alternatives.push({
             alternativeLabel: alternative[0],
-            alternativeAvailabilityUrl: alternative[1]
+            alternativeAvailabilityUrl: alternative[1],
           });
         }
 
@@ -107,7 +122,7 @@ function getCurrentDateString() {
           alternative = columns[12].split(";");
           book.alternatives.push({
             alternativeLabel: alternative[0],
-            alternativeAvailabilityUrl: alternative[1]
+            alternativeAvailabilityUrl: alternative[1],
           });
         }
 
@@ -115,25 +130,30 @@ function getCurrentDateString() {
           alternative = columns[13].split(";");
           book.alternatives.push({
             alternativeLabel: alternative[0],
-            alternativeAvailabilityUrl: alternative[1]
+            alternativeAvailabilityUrl: alternative[1],
           });
         }
 
         result.books.books.push(book);
       }
 
-      const blob = new Blob([JSON.stringify(result, null, 2)], {
-        type: "text/json"
-      });
-      const a = document.querySelector("a.button");
-      a.href = window.URL.createObjectURL(blob);
+      if (containsDuplicates) {
+        alert("Sisältää duplikaatteja! Ei voida luoda JSON-tiedostoa.");
+      } else {
+        const blob = new Blob([JSON.stringify(result, null, 2)], {
+          type: "text/json",
+        });
+
+        const a = document.querySelector("a.button");
+        a.href = window.URL.createObjectURL(blob);
+      }
     };
 
     reader.readAsText(event.target.files[0]);
   });
 
   const button = document.querySelector("a.button");
-  button.addEventListener("click", function(event) {
+  button.addEventListener("click", function (event) {
     const element = event.target;
     const href = element.getAttribute("href");
     if (href.length < 1) {

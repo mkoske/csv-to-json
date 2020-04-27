@@ -12,8 +12,10 @@ body {
 body {
   box-sizing: border-box;
   display: flex;
+  flex-direction: column;
   justify-content: space-around;
   align-items: center;
+  padding: 50px;
 }
 
 h1 {
@@ -65,4 +67,14 @@ form {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  margin: 20px;
+}
+
+.log {
+  flex: 1;
+  justify-content: flex-start;
+}
+
+.log h1 {
+  margin-bottom: 20px;
 }
