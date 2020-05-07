@@ -93,6 +93,11 @@ function getCurrentDateString() {
         book.updated = columns[3];
         book.coverImageUrl = columns[4];
 
+        // Force HTTPS
+        if (/^http:/.test(book.coverImageUrl)) {
+          book.coverImageUrl = book.coverImageUrl.replace("http:", "https:");
+        }
+
         book.ageGroup = columns[5].split(",").map(function (item) {
           return item.trim();
         });
