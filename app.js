@@ -90,7 +90,7 @@ function getCurrentDateString() {
         book.isbn = columns[0];
         book.title = columns[1];
         book.author = columns[2];
-        book.updated = columns[3];
+        book.updated = columns[3] ? columns[3] : new Date().toISOString();
         book.coverImageUrl = columns[4];
 
         // Force HTTPS
