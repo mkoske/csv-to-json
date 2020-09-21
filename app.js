@@ -75,8 +75,6 @@ function getCurrentDateString() {
 
         reader.readAsText(event.target.files[0]);
     });
-
-    console.log(result);
 })();
 
 const getColumns = (line) => {
