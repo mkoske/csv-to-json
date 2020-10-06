@@ -74,6 +74,9 @@ function getCurrentDateString() {
 
             result.books.books = result.books.books.map((book) => {
                 book["alternatives"] = [];
+
+                // combine alternative fields into objects and remove separate
+                // properties
                 for (const property in book) {
                     if (property.search(/^\d:/) === -1) {
                         continue;
@@ -94,6 +97,7 @@ function getCurrentDateString() {
                     delete book[property];
                 }
 
+                // filter out objects with empty values
                 book.alternatives = book.alternatives.filter((alternative) => {
                     if (alternative["alternativeAvailabilityUrl"].trim() === "" && alternative["alternativeLabel"].trim() === "") {
                         return false;
@@ -105,7 +109,7 @@ function getCurrentDateString() {
                 return book;
             });
 
-            // Duplicate checking doesn't work yet
+            // TODO: Duplicate checking doesn't work yet
             if (containsDuplicates) {
                 alert("Sisältää duplikaatteja! Ei voida luoda JSON-tiedostoa.");
             } else {
