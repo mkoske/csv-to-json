@@ -51,10 +51,10 @@ function getCurrentDateString() {
             const headerRow = parseInt(document.querySelector("#headerRow").value);
 
             // actual data columns; from headerRow till end
-            let lines = raw.slice(headerRow + 1);
+            let lines = raw.slice(headerRow);
 
             // column names
-            let columnNames = getColumns(raw[headerRow]);
+            let columnNames = getColumns(raw[headerRow - 1]);
 
             for (let i = 0; i < lines.length; i++) {
                 let columns = getColumns(lines[i]);
@@ -67,11 +67,32 @@ function getCurrentDateString() {
                 let book = {};
                 for (let col = 0; col < columnNames.length; col++) {
                     book[columnNames[col]] = columns[col];
+
+                    let currentColumn = columnNames[col];
+                    // Some checking for duplicate ISBNS
+                    if (currentColumn === "isbn" && isbns.includes(columns[col])) {
+
+                        containsDuplicates = true;
+
+                        let isbn = columns[col] ? columns[col] : "tyhjä merkkijono";
+                        let p = document.createElement("p");
+                        
+                        p.classList.add("alert");
+                        p.classList.add("alert-danger");
+                        
+                        p.innerHTML = `Duplikaatti ISBN: ${isbn}`;
+                        
+                        log.appendChild(p)
+                    } else {
+                        isbns.push(columns[col]);
+                    }
                 }
 
                 result.books.books.push(book);
             }
 
+            // This handles alternative books; it groups them as objects, i.e.
+            // one alternative is one object after this mapping
             result.books.books = result.books.books.map((book) => {
                 book["alternatives"] = [];
 
@@ -109,15 +130,15 @@ function getCurrentDateString() {
                 return book;
             });
 
-            // TODO: Duplicate checking doesn't work yet
+            const a = document.querySelector("a.btn");
             if (containsDuplicates) {
-                alert("Sisältää duplikaatteja! Ei voida luoda JSON-tiedostoa.");
+                a.setAttribute("disabled", "disabled")
+                a.classList.add("disabled");
             } else {
                 const blob = new Blob([JSON.stringify(result, null, 2)], {
                     type: "text/json",
                 });
 
-                const a = document.querySelector("a.btn");
                 a.href = window.URL.createObjectURL(blob);
             }
         };
