@@ -24,15 +24,19 @@ function getCurrentDateString() {
     return "" + year + "-" + month + "-" + dayno;
 }
 
+const template = () => {
+    return {
+            books: {
+                title: "Pirkanmaan lukudiplomi",
+                description: "",
+                updated: getCurrentDateString(),
+                books: [],
+            },
+        };
+};
+
 (function () {
-    const result = {
-        books: {
-            title: "Perhelukudiplomin kirjalista",
-            description: "",
-            updated: getCurrentDateString(),
-            books: [],
-        },
-    };
+    let result = template();
 
     let containsDuplicates = false;
 
@@ -140,6 +144,10 @@ function getCurrentDateString() {
                 });
 
                 a.href = window.URL.createObjectURL(blob);
+
+                // Reset the template to not to have growing amount of data in
+                // same template
+                result = template();
             }
         };
 
