@@ -1,4 +1,4 @@
-# TSV -> JSON
+# TSV → JSON
 
 Muunnin lukudiplomi-datalle. 
 
