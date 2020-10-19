@@ -47,6 +47,7 @@ const template = () => {
     files.addEventListener("change", function (event) {
         const reader = new FileReader();
 
+        result = template();
         reader.onload = function (event) {
             // raw data lines
             const raw = event.target.result.toString().split("\n");
