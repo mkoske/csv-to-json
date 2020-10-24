@@ -26,13 +26,11 @@ function getCurrentDateString() {
 
 const template = () => {
     return {
-            books: {
-                title: "Pirkanmaan lukudiplomi",
-                description: "",
-                updated: getCurrentDateString(),
-                books: [],
-            },
-        };
+        title: "Pirkanmaan lukudiplomi",
+        description: "",
+        updated: getCurrentDateString(),
+        data: [],
+    };
 };
 
 (function () {
@@ -76,29 +74,28 @@ const template = () => {
                     let currentColumn = columnNames[col];
                     // Some checking for duplicate ISBNS
                     if (currentColumn === "isbn" && isbns.includes(columns[col])) {
-
                         containsDuplicates = true;
 
                         let isbn = columns[col] ? columns[col] : "tyhjä merkkijono";
                         let p = document.createElement("p");
-                        
+
                         p.classList.add("alert");
                         p.classList.add("alert-danger");
-                        
+
                         p.innerHTML = `Duplikaatti ISBN: ${isbn}`;
-                        
-                        log.appendChild(p)
+
+                        log.appendChild(p);
                     } else {
                         isbns.push(columns[col]);
                     }
                 }
 
-                result.books.books.push(book);
+                result.data.push(book);
             }
 
             // This handles alternative books; it groups them as objects, i.e.
             // one alternative is one object after this mapping
-            result.books.books = result.books.books.map((book) => {
+            result.data = result.data.map((book) => {
                 book["alternatives"] = [];
 
                 // combine alternative fields into objects and remove separate
@@ -137,7 +134,7 @@ const template = () => {
 
             const a = document.querySelector("a.btn");
             if (containsDuplicates) {
-                a.setAttribute("disabled", "disabled")
+                a.setAttribute("disabled", "disabled");
                 a.classList.add("disabled");
             } else {
                 const blob = new Blob([JSON.stringify(result, null, 2)], {
